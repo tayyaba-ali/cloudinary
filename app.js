@@ -18,16 +18,28 @@ fileInput.addEventListener("change", () => {
     .then((response) => response.json())
     .then((data) => {
       let resourceURl = data.secure_url;
+
+      let transformedUrl = resourceURl.replace(
+        "upload/",
+        "upload/h_200,w_200/r_max/c_crop,g_face"
+      );
       console.log("uploaded succesfully", resourceURl);
-      //   let img = new Image()
-      //   img.src = resourceURl
 
-      //   gallery.appendChild(img)
+      console.log(data);
 
-      //   const pdfEmbed = document.createElement("embed")
-      //   pdfEmbed.src = resourceURl
-      //   pdfEmbed.type = "application/pdf"
-      //   gallery.appendChild(pdfEmbed)
+      if (data.format == "pdf" || data.format == "mp4") {
+        let iframe = document.createElement("iframe");
+        iframe.src = resourceURl;
+        iframe.width = "500px";
+        iframe.height = "500px";
+        gallery.appendChild(iframe);
+        console.log(iframe);
+      } else {
+        let img = new Image();
+        img.src = transformedUrl;
+
+        gallery.appendChild(img);
+      }
     })
     .catch((e) => {
       console.log(e);
@@ -36,7 +48,8 @@ fileInput.addEventListener("change", () => {
 
 let dropArea = document.getElementById("dropArea");
 
-dropArea.addEventListener("dragover", () => {
+dropArea.addEventListener("dragover", (e) => {
+  e.preventDefault();
   console.log("dragging over");
 });
 // dropArea.addEventListener("dragleave",()=>{
